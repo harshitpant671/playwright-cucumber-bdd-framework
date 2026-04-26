@@ -1,17 +1,17 @@
 import { Before, After } from "@cucumber/cucumber";
 import { chromium, Browser, Page } from "playwright";
 
-let browser: Browser;
-let page: Page;
-
-Before(async function () {
+Before({ timeout: 30000 }, async function (this: any) {
   const isCI = !!process.env.CI;
-  browser = await chromium.launch({ headless: isCI });
-  page = await browser.newPage();
-  this.page = page;
+  this.browser = await chromium.launch({ headless: isCI });
+  this.page = await this.browser.newPage();
 });
 
-After(async function () {
-  await this.page.close();
-  await browser.close();
+After(async function (this: any) {
+  if (this.page) {
+    await this.page.close();
+  }
+  if (this.browser) {
+    await this.browser.close();
+  }
 });
