@@ -5,7 +5,8 @@ let browser: Browser;
 let page: Page;
 
 Before(async function () {
-  browser = await chromium.launch({ headless: false });
+  const isCI = !!process.env.CI;
+  browser = await chromium.launch({ headless: isCI });
   page = await browser.newPage();
   this.page = page;
 });
